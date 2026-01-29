@@ -1,10 +1,12 @@
 import HeroSection from '@/components/layout/hero-section';
 import { authClient } from '@/lib/auth-client';
+import { userService } from '@/service/user.service';
 import React from 'react';
 
 const page = async() => {
-    const session = await authClient.getSession()
-    console.log(session)
+    const {data} = await userService.getSession()
+    console.log(data)
+
 
   return (
     <div className='h-[200vh]'>
