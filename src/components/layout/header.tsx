@@ -1,10 +1,20 @@
 'use client'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { authClient } from '@/lib/auth-client'
+import { useRouter } from 'next/navigation'
+type HeroHeaderProps = {
+    user?: {
+        name: string;
+        email: string;
+        image?: string;
+        role?: string;
+    } | null;
+};
 
 const menuItems = [
     { name: 'Home', href: '/' },
@@ -13,9 +23,17 @@ const menuItems = [
     { name: 'About', href: '#link' },
 ]
 
-export const HeroHeader = () => {
+export const HeroHeader = ({user} : HeroHeaderProps) => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
+    const router = useRouter()
+    console.log(user)
+
+    const handleLogout = async () => {
+        await authClient.signOut()
+        router.push('/')
+        router.refresh()
+    }
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -28,7 +46,7 @@ export const HeroHeader = () => {
         <header>
             <nav
                 data-state={menuState && 'active'}
-                className="fixed z-20 w-full px-2">
+                className="fixed mt-2 z-20 w-full px-2">
                 <div className={cn('mx-auto mt-2 max-w-7xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-background/50 max-w-6xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
                     <div className="relative flex flex-wrap items-center justify-between gap-6 py-2 lg:gap-0 lg:py-2">
                         <div className="flex w-full justify-between lg:w-auto">
@@ -77,31 +95,51 @@ export const HeroHeader = () => {
                                 </ul>
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="login">
-                                        <span>Login</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="register">
-                                        <span>Register</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="#">
-                                        <span>Get Started</span>
-                                    </Link>
-                                </Button>
+                                {user ? (
+                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                                        <div className="flex items-center gap-3 px-3  rounded-lg bg-muted/50">
+                                            {user.image && (
+                                                <img
+                                                    src={user.image}
+                                                    alt={user.name}
+                                                    className="w-8 h-8 rounded-full object-cover"
+                                                />
+                                            )}
+                                            <div className="text-sm flex-1">
+                                                <p className="font-semibold text-foreground leading-tight">{user.name}</p>
+                                                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                                            </div>
+                                        </div>
+                                        <Button
+                                            onClick={handleLogout}
+                                            variant="outline"
+                                            size="sm"
+                                            className="w-full sm:w-auto whitespace-nowrap">
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            Logout
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Button
+                                            asChild
+                                            variant="outline"
+                                            size="sm"
+                                            className="w-full sm:w-auto">
+                                            <Link href="login">
+                                                <span>Login</span>
+                                            </Link>
+                                        </Button>
+                                        <Button
+                                            asChild
+                                            size="sm"
+                                            className="w-full sm:w-auto">
+                                            <Link href="register">
+                                                <span>Register</span>
+                                            </Link>
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

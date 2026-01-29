@@ -6,6 +6,7 @@ export const userService = {
         try {
             const cookiesStore = await cookies();
             console.log(cookiesStore); 
+            console.log(process.env.AUTH_URL);
      const res = await fetch(`${process.env.AUTH_URL}/get-session`, {
               
                 headers: {

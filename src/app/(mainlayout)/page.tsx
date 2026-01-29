@@ -1,11 +1,11 @@
 import HeroSection from '@/components/layout/hero-section';
-import { authClient } from '@/lib/auth-client';
+
 import { userService } from '@/service/user.service';
 import React from 'react';
 
 const page = async() => {
-    const {data} = await userService.getSession()
-    console.log(data)
+    // const {data} = await userService.getSession()
+    // console.log(data)
 
 
   return (
