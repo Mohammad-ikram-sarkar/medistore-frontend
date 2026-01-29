@@ -5,10 +5,7 @@ export const userService = {
         // Logic to get user session
         try {
             const cookiesStore = await cookies();
-            console.log(cookiesStore); 
-            console.log(process.env.AUTH_URL);
-     const res = await fetch(`${process.env.AUTH_URL}/get-session`, {
-              
+            const res = await fetch(`${process.env.AUTH_URL}/get-session`, {
                 headers: {
                     "Content-Type": "application/json",
                     Cookie: cookiesStore.toString(),
@@ -16,15 +13,19 @@ export const userService = {
                 cache: "no-store",
             });
 
-            const session  = await res.json();
-            if(session === null) {
-                return {data :  null , error : "No active session"};
+            if (!res.ok) {
+                return {data: null, error: "Failed to fetch session"};
+            }
+
+            const session = await res.json();
+            if(session === null || !session.user) {
+                return {data: null, error: "No active session"};
             }
        
-            return {data : session.user , error : null};
-        }catch (error ) {
-            throw new Error("Failed to get user session");
+            return {data: session.user, error: null};
+        } catch (error) {
+            // Return error object instead of throwing to allow graceful handling
+            return {data: null, error: "Failed to get user session"};
         }
-
     }
 }

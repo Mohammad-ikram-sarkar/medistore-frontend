@@ -1,8 +1,6 @@
-import { authClient } from '@/lib/auth-client';
 import React from 'react';
 
-const page = async() => {
-    
+const page = () => {
     return (
         <div>
             

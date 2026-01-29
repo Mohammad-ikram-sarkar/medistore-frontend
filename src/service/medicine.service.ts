@@ -1,15 +1,24 @@
 import { env } from "../../env";
 
-const API_URL = env.BACKEND_URL
-const medicineService = {
-    getMedicines: async () => {
-        const response = await fetch(`${API_URL}/medicines`);
-        return response.json();
-    },
-    getMedicineById: async (id: string) => {
-        const response = await fetch(`${API_URL}/medicines/${id}`);
-        return response.json();
-    },
-};
+ 
+ const medicineService = {
 
+    
+    getMedicines: async () => {
+        try {
+             const response = await fetch(`${env.BACKEND_URL}/api/medicines`);
+        const data = await response.json();
+        
+        return {data : data.data , error : null};
+        }catch (error) {
+            return {data : null , error : "get api not working"}
+        }
+        
+       
+
+        
+    },
+   
+   
+};
 export default medicineService;

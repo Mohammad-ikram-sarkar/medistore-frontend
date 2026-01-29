@@ -1,6 +1,8 @@
 "use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useSearchParams, useRouter } from "next/navigation"
+
 import {
   Card,
   CardContent,
@@ -22,10 +24,36 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const redirectTo = searchParams.get("redirect") || "/";
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+    try {
+      const { data, error } = await authClient.signIn.email({ email, password });
+      // if (error) throw error;
+      console.log(data)
+      console.log(error)
+
+      // Redirect to original page after login
+      router.push(redirectTo);
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  };
+  
+
   const signIn = async () => {
   const data = await authClient.signIn.social({
     provider: "google",
-    callbackURL: "http://localhost:3000"
+    callbackURL: `${window.location.origin}${redirectTo}`
   });
 };
   return (
@@ -38,7 +66,8 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+        <form onSubmit={handleSubmit}>
+
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -62,7 +91,7 @@ export function LoginForm({
                 <Input id="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" >Login</Button>
                 <Button variant="outline" onClick={() => signIn()} type="button">
                   Login with Google
                 </Button>
