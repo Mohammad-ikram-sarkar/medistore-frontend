@@ -1,4 +1,11 @@
-import React from 'react';
+import { AppSidebar } from "@/components/sidebarcomponents/app-sidebar";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/sidebarcomponents/sidebar";
+import { Separator } from "@radix-ui/react-separator";
+
+
+
+
 
 export default function DashboardLayout({
   children,
@@ -11,12 +18,57 @@ export default function DashboardLayout({
   customer: React.ReactNode;
   seller: React.ReactNode;
 }) {
+ const user = {
+    role : "admin"
+  }
+  const renderDashboard = () => {
+  switch (user.role) {
+    case "admin":
+      return admin;
+    case "customer":
+      return customer;
+    case "seller":
+      return seller;
+    default:
+      return null;
+  }
+};
+  
   return (
-    <div>
-      {children}
-      {admin}
-      {customer}
-      {seller}
-    </div>
+    
+    
+   
+     
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "19rem",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 data-[orientation=vertical]:h-4"
+          />
+          <Breadcrumb>
+            {/* <BreadcrumbList>
+             
+              <BreadcrumbSeparator className="hidden md:block" />
+            
+            </BreadcrumbList> */}
+          </Breadcrumb>
+        </header>
+          {renderDashboard()}
+      </SidebarInset>
+    </SidebarProvider>
+      
+     
+    
+       
+   
   );
 }

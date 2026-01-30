@@ -1,17 +1,21 @@
 import { HeroHeader } from "@/components/layout/header";
 import { userService } from "@/service/user.service";
 
-export default async function MainLayout({ children }: { children: React.ReactNode }) {
-    // Fetch session data with error handling for build time
+export const dynamic = "force-dynamic"; // 🔥 IMPORTANT
+
+export default async function MainLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     let user = null;
-    
+
     try {
         const { data, error } = await userService.getSession();
         if (!error) {
             user = data;
         }
-    } catch (err) {
-        // Silently fail during build/prerendering
+    } catch {
         user = null;
     }
 

@@ -23,7 +23,7 @@ export async function proxy(request: NextRequest) {
     }
 
     // Logged in but wrong role → forbidden
-    if (data.role !== Role.CUSTOMER) {
+    if (data.role !== Role.SELLER) {
       const forbiddenUrl = new URL("/fobidden", request.nextUrl.origin);
       return NextResponse.redirect(forbiddenUrl);
     }
