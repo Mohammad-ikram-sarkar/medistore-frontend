@@ -18,6 +18,16 @@ import { env } from "../../env";
 
         
     },
+    getMedcinebyId : async (id : string) => {
+        try {
+            const response = await fetch(`${env.BACKEND_URL}/api/medicines/${id}`)
+            const data = await response.json();
+        
+        return {data : data.data , error : null};
+        }catch (err) {
+            return {data : null, error : "get api not working"}
+        }
+    }
    
    
 };

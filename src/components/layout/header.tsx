@@ -24,10 +24,11 @@ const menuItems = [
     { name: 'About', href: '#link' },
 ]
 
-export const HeroHeader = ({user} : HeroHeaderProps) => {
+export const HeroHeader = ({ user }: HeroHeaderProps) => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
     const router = useRouter()
+   
     // console.log(user)
 
     const handleLogout = async () => {
@@ -35,6 +36,7 @@ export const HeroHeader = ({user} : HeroHeaderProps) => {
         router.push('/')
         router.refresh()
     }
+
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -54,7 +56,7 @@ export const HeroHeader = ({user} : HeroHeaderProps) => {
                             <Link
                                 href="/"
                                 aria-label="home"
-                                >
+                            >
                                 <Logo />
                             </Link>
 
@@ -66,7 +68,7 @@ export const HeroHeader = ({user} : HeroHeaderProps) => {
                                 <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
                             </button>
                         </div>
-                        
+
 
                         <div className="absolute inset-0 m-auto hidden size-fit lg:block">
                             <ul className="flex gap-8 text-sm">
@@ -81,7 +83,7 @@ export const HeroHeader = ({user} : HeroHeaderProps) => {
                                 ))}
                             </ul>
                         </div>
-                       
+
                         <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
                             <div className="lg:hidden">
                                 <ul className="space-y-6 text-base">
@@ -98,7 +100,13 @@ export const HeroHeader = ({user} : HeroHeaderProps) => {
                             </div>
                             <ModeToggle></ModeToggle>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                {user ? (
+                                {user === undefined ? (
+                                    // 🔄 LOADING
+                                    <div className="flex gap-3">
+                                        <div className="h-9 w-20 rounded-md bg-muted animate-pulse" />
+                                        <div className="h-9 w-24 rounded-md bg-muted animate-pulse" />
+                                    </div>
+                                ) : user ? (
                                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
                                         <div className="flex items-center gap-3 px-3  rounded-lg bg-muted/50">
                                             {user.image && (
@@ -110,7 +118,7 @@ export const HeroHeader = ({user} : HeroHeaderProps) => {
                                             )}
                                             <div className="text-sm flex-1">
                                                 <p className="font-semibold text-foreground leading-tight">{user.name}</p>
-                                               
+
                                             </div>
                                         </div>
                                         <Button

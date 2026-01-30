@@ -28,4 +28,5 @@ export const userService = {
             return {data: null, error: "Failed to get user session"};
         }
     }
+    
 }

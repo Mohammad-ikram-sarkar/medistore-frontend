@@ -1,11 +1,11 @@
 import HeroSection from '@/components/layout/hero-section';
 
-// import { userService } from '@/service/user.service';
+import { userService } from '@/service/user.service';
 import React from 'react';
 
 const page = async() => {
-    // const {data} = await userService.getSession()
-    // console.log(data)
+    const {data, error} = await userService.getSession()
+    console.log("esoo",data, error)
 
 
   return (
