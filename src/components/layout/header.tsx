@@ -20,8 +20,7 @@ type HeroHeaderProps = {
 const menuItems = [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
-    { name: 'Pricing', href: '#link' },
-    { name: 'About', href: '#link' },
+    { name: 'About', href: '/about' },
 ]
 
 export const HeroHeader = ({ user }: HeroHeaderProps) => {
@@ -98,7 +97,7 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                                     ))}
                                 </ul>
                             </div>
-                            <ModeToggle></ModeToggle>
+                            
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                                 {user === undefined ? (
                                     // 🔄 LOADING
@@ -116,8 +115,8 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                                                     className="w-8 h-8 rounded-full object-cover"
                                                 />
                                             )}
-                                            <div className="text-sm flex-1">
-                                                <p className="font-semibold text-foreground leading-tight">{user.name}</p>
+                                            <div className=" flex-1">
+                                                <p className="font-semibold text-foreground ">{user.name}</p>
 
                                             </div>
                                         </div>
@@ -137,7 +136,7 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                                             variant="outline"
                                             size="sm"
                                             className="w-full sm:w-auto">
-                                            <Link href="login">
+                                            <Link href="/login">
                                                 <span>Login</span>
                                             </Link>
                                         </Button>
@@ -145,14 +144,16 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                                             asChild
                                             size="sm"
                                             className="w-full sm:w-auto">
-                                            <Link href="register">
+                                            <Link href="/register">
                                                 <span>Register</span>
                                             </Link>
                                         </Button>
                                     </>
                                 )}
                             </div>
+                            <ModeToggle/>
                         </div>
+                        
                     </div>
                 </div>
             </nav>

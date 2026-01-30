@@ -10,7 +10,9 @@ export const userService = {
                     "Content-Type": "application/json",
                     Cookie: cookiesStore.toString(),
                 },
-                cache: "no-store",
+                next : {
+                    tags : ["session"]
+                }
             });
 
             if (!res.ok) {

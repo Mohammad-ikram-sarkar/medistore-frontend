@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Calendar, Package, Building2, Info, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface Product {
     id: string;
@@ -26,7 +27,7 @@ interface ProductDetailProps {
     product: Product;
 }
 
-export default function ProductDetail({ product }: ProductDetailProps) {
+export default function Shopdetails({ product }: ProductDetailProps) {
     const expiryDate = new Date(product.expiryDate);
     const formattedExpiry = expiryDate.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -174,6 +175,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
 
                         {/* Action Buttons */}
                         <div className="pt-4 flex gap-2 justify-between items-center ">
+                            <Link href={"/cart"} className='flex-1'>
                             <Button
                              
                                 className=" font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex-1 w-full"
@@ -182,13 +184,19 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                                 Add to Cart
                             </Button>
 
+                            </Link>
+                            
+                            <Link href={"/checkout"} className='flex-1'>
                             <Button
                                 
                                 variant="outline"
-                                className=" border-2  border-slate-300 hover:bg-slate-50 font-semibold flex-1 w-full "
+                                className=" border-2  border-slate-300 hover:bg-slate-50 font-semibold  w-full "
                             >
                                 Order
                             </Button>
+
+                            </Link>
+                            
                         </div>
 
                         {/* Warning Notice */}

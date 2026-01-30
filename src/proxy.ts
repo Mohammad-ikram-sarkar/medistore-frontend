@@ -1,23 +1,31 @@
-import { NextRequest, NextResponse } from "next/server"
-import { userService } from "./service/user.service"
+import { NextRequest, NextResponse } from "next/server";
+import { userService } from "./service/user.service";
+import { Role } from "./constants/Role";
 
 export async function proxy(request: NextRequest) {
   let data = null;
+
   try {
     const session = await userService.getSession();
-    data = session.data;
+    data = session?.data ?? null;
   } catch (err) {
     console.error("Failed to get session:", err);
   }
 
   const pathname = request.nextUrl.pathname.replace(/\/$/, "");
 
-  if (pathname === "/addtocart") {
+  if (pathname === "/cart") {
+    // Not logged in → login
     if (!data) {
-      // Add a redirect query to remember the original page
       const loginUrl = new URL("/login", request.nextUrl.origin);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
+    }
+
+    // Logged in but wrong role → forbidden
+    if (data.role !== Role.CUSTOMER) {
+      const forbiddenUrl = new URL("/fobidden", request.nextUrl.origin);
+      return NextResponse.redirect(forbiddenUrl);
     }
   }
 
@@ -25,5 +33,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/addtocart",
-}
+  matcher: "/cart",
+};
