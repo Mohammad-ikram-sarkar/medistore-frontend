@@ -27,7 +27,8 @@ import { env } from "../../env";
         }catch (err) {
             return {data : null, error : "get api not working"}
         }
-    }
+    },
+    
    
    
 };

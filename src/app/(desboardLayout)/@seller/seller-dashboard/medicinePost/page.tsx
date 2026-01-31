@@ -1,3 +1,4 @@
+
 import MedicineCreate from '@/components/dashboard/sellerComponents/MedicineCreate';
 import categoriesService from '@/service/categories.service';
 import { userService } from '@/service/user.service';
@@ -21,7 +22,8 @@ const Page = async () => {
 
   return (
     <div>
-      <MedicineCreate categories={categories as Category[]} authorId={authorId} />
+      <MedicineCreate
+       categories={categories as Category[]} authorId={authorId} />
     </div>
   );
 };

@@ -5,7 +5,7 @@ export const sellerRoutes = [
         items :[
             {
             title  : "Profile",
-            url : "/seller-dashboard/profile"
+            url : "/seller-dashboard"
             },
             {
                 title : "Orders",
@@ -14,6 +14,10 @@ export const sellerRoutes = [
             {
                 title : "Update  Status",
                 url : "/seller-dashboard/update-status"
+            },
+            {
+                title  : "Medicine Post",
+                url : "/seller-dashboard/medicinePost"
             }
         ] 
     }

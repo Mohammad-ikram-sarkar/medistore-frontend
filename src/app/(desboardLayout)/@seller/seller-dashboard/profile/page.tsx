@@ -1,9 +1,13 @@
+import Profile from '@/components/dashboard/Profile';
+import { userService } from '@/service/user.service';
 import React from 'react';
 
-const page = () => {
+const page = async() => {
+    const {data} = await userService.getSession()
+    console.log(data)
     return (
         <div>
-            prfile 
+            <Profile user={data}/>
         </div>
     );
 };
