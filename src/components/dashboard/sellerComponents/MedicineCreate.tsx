@@ -26,6 +26,9 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
+import medicineService from '@/service/medicine.service';
+import { createMedicineAction } from '@/action/medicine.actions';
+
 type Category = {
   id: string;
   name: string;
@@ -73,26 +76,26 @@ const MedicineCreate: React.FC<MedicineCreateProps> = ({
     onSubmit: async ({ value }) => {
       setIsSubmitting(true);
       try {
-        const formData = new FormData();
-        formData.append('name', value.name);
-        formData.append('brand', value.brand);
-        formData.append('price', value.price.toString());
-        formData.append('quantity', value.quantity.toString());
-        formData.append('image', value.image);
-        formData.append('expiryDate', value.expiryDate);
-        formData.append('description', value.description);
-        formData.append('categoryId', value.categoryId);
-        formData.append('authorId', authorId);
+        const medicineData = {
+          name: value.name,
+          brand: value.brand,
+          price: value.price,
+          quantity: value.quantity,
+          image: value.image,
+          expiryDate: value.expiryDate,
+          description: value.description,
+          categoryId: value.categoryId,
+          authorId: authorId,
+        };
 
-        // const result = await createMedicine(formData);
-        console.log(formData)
-
-        // if (result.success) {
-        //   toast.success('Medicine created successfully!');
-        //   router.push('/medicines');
-        // } else {
-        //   toast.error(result.error || 'Failed to create medicine');
-        // }
+        const result = await createMedicineAction(medicineData);
+        
+        if (result.success) {
+          toast.success('Medicine created successfully!');
+          router.push('/medicines');
+        } else {
+          toast.error(result.error?.message || 'Failed to create medicine');
+        }
       } catch (error) {
         toast.error('An error occurred while creating the medicine');
         console.error(error);
@@ -100,9 +103,7 @@ const MedicineCreate: React.FC<MedicineCreateProps> = ({
         setIsSubmitting(false);
       }
     },
-    
   });
-
   return (
     <div className="container mx-auto py-8 max-w-2xl">
       <Card>
