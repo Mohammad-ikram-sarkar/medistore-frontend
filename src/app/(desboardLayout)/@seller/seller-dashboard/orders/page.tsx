@@ -1,29 +1,17 @@
-import MedicineCreate from '@/components/dashboard/sellerComponents/MedicineCreate';
-import categoriesService from '@/service/categories.service';
-import { userService } from '@/service/user.service';
+import OrderData from '@/components/dashboard/sellerComponents/OrderData';
+import medicineService from '@/service/medicine.service';
 import React from 'react';
 
-type Category = {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-const Page = async () => {
-  const { data: categories, error } = await categoriesService.getallcategories();
-  const { data: session } = await userService.getSession();
-
-  if (error) return <div>Failed to load categories</div>;
-  if (!session) return <div>Failed to load session</div>;
-
-  const authorId = session.id;
-
+const page = async() => {
+  const {data} = await medicineService.orderMedcinebyId()
+  console.log(data.data)
+  
   return (
     <div>
-      <MedicineCreate categories={categories as Category[]} authorId={authorId} />
+      <OrderData data={data.data}/>
+      
     </div>
   );
 };
 
-export default Page;
+export default page;

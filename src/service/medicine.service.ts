@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { env } from "../../env";
 import { createMedicine } from "../../types/medicine.type";
 
@@ -30,6 +30,26 @@ const medicineService = {
       return { data: null, error: "get api not working" }
     }
   },
+  orderMedcinebyId : async () => {
+     try {
+       const cookieStore = await cookies();
+      const response = await fetch(`${env.API_URL}/api/seller/orders`,
+        {
+           headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        }
+      );
+      const data = await response.json();
+
+      return { data: data, error: null };
+    } catch (error) {
+      return { data: null, error: "get api not working" }
+    }
+
+     
+  }
   
 
 }

@@ -6,6 +6,7 @@ import { medicine } from '../../../../types/medicine.type';
 
 const page = async () => {
     const getmedicine = await medicineService.getMedicines();
+    console.log(getmedicine)
 
     
     return (
