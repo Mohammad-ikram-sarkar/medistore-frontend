@@ -1,4 +1,5 @@
 import OrderData from '@/components/dashboard/sellerComponents/OrderData';
+import OrderStatusChange from '@/components/dashboard/sellerComponents/OrderStatusChange';
 import medicineService from '@/service/medicine.service';
 import React from 'react';
 
@@ -8,7 +9,7 @@ const page = async() => {
   
   return (
     <div>
-      <OrderData data={data.data}/>
+      <OrderStatusChange data={data.data} ></OrderStatusChange>
       
     </div>
   );
