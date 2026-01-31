@@ -53,7 +53,7 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
 
       try {
         const { error,data } = await authClient.signIn.email(value)
-        // console.log(data)
+        console.log(data)
 
         if (error) {
           toast.error(error.message, { id: toastId })
@@ -82,7 +82,7 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
         provider: "google",
 
         // ✅ Preserve redirect after OAuth
-        callbackURL: `${window.location.origin}/login?redirect=${encodeURIComponent(safeRedirect)}`,
+        callbackURL: `${window.location.origin}/login?redirect=${encodeURIComponent(safeRedirect)}` || "http://localhost:3000" ,
       })
 
     } catch (err) {

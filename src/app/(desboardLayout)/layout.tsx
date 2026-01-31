@@ -19,13 +19,12 @@ export default async function DashboardLayout({
   customer: React.ReactNode;
   seller: React.ReactNode;
 }) {
- const user = {
-    role : "admin"
-  }
+
  const {data} =await userService.getSession()
- console.log(data)
+ 
+//  console.log(data)
   const renderDashboard = () => {
-  switch (user.role) {
+  switch (data.role) {
     case "admin":
       return admin;
     case "customer":
@@ -49,7 +48,7 @@ export default async function DashboardLayout({
         } as React.CSSProperties
       }
     >
-      <AppSidebar user={user} />
+      <AppSidebar user={data} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />

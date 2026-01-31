@@ -5,15 +5,15 @@ export const adminRoutes = [
         items :[
             {
             title  : "Users",
-            url : "/dashboard/users"
+            url : "/admin-dashboard/users"
             },
             {
                 title : "Orders",
-                url : "/dashboard/orders"
+                url : "/admin-dashboard/orders"
             },
             {
                 title : "Categories",
-                url : "/dashboard/categories"
+                url : "/admin-dashboard/categories"
             }
         ] 
     }

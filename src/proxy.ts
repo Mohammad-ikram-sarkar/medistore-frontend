@@ -14,6 +14,7 @@ export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname.replace(/\/$/, "");
 
+  /* ===================== CART ===================== */
   if (pathname === "/cart") {
     // Not logged in → login
     if (!data) {
@@ -22,10 +23,40 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Logged in but wrong role → forbidden
-    if (data.role !== Role.SELLER) {
-      const forbiddenUrl = new URL("/fobidden", request.nextUrl.origin);
-      return NextResponse.redirect(forbiddenUrl);
+    // Logged in but not customer → forbidden
+    if (data.role !== Role.CUSTOMER) {
+      return NextResponse.redirect(
+        new URL("/forbidden", request.nextUrl.origin)
+      );
+    }
+  }
+
+  /* ===================== DASHBOARD ===================== */
+  if (pathname.startsWith("/dashboard")) {
+    // Not logged in → login
+    
+    if (!data) {
+      return NextResponse.redirect(
+        new URL("/login", request.nextUrl.origin)
+      );
+    }
+    if(data.role === Role.SELLER) {
+       return NextResponse.redirect(new URL("/seller-dashboard", request.url));
+    }
+    if(data.role ===Role.CUSTOMER) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+
+    }
+      if(data.role ===Role.ADMIN) {
+      return NextResponse.redirect(new URL("/admin-dashboard", request.url));
+
+    }
+
+    // Only ADMIN and SELLER allowed
+    if (data.role !== Role.ADMIN && data.role !== Role.SELLER) {
+      return NextResponse.redirect(
+        new URL("/forbidden", request.nextUrl.origin)
+      );
     }
   }
 
@@ -33,5 +64,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/cart",
+  matcher: ["/cart", "/dashboard", "/dashboard/:path*",
+    "/seller-dashboard",
+    "/seller-dashboard/:path*",
+    "/admin-deshboard",
+    "/admin-deshboard/:path*"
+
+  ],
 };

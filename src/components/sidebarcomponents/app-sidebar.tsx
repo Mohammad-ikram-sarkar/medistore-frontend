@@ -17,76 +17,17 @@ import {
 
 import { adminRoutes } from "@/routes/adminRoute"
 import { customerRoutes } from "@/routes/customerRoute"
-import { sellerRoutes } from "@/routes/sellerRoute"
+
 import { Route } from "../../../types"
+import { sellerRoutes } from "@/routes/sellerRoute"
+import Link from "next/link"
 
 
 
 
 
 // This is sample data.
-const data = {
-  navMain: [
-    
-    {
-      title: "Home Page",
-      url: "/",
-      items: [
-        {
-          title: "Routing",
-          url: "#",
-        },
-        {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-   
-   
-  ],
-}
+
 
 export function AppSidebar({user,  ...props }: {user :{role :string} & React.ComponentProps<typeof Sidebar>}) {
   let routes :Route[]  = [] 
@@ -121,16 +62,16 @@ export function AppSidebar({user,  ...props }: {user :{role :string} & React.Com
             {routes.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href={item.url} className="font-medium">
+                  <Link href={item.url} className="font-medium">
                     {item.title}
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
                     {item.items.map((item) => (
                       <SidebarMenuSubItem key={item.title}>
                         <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
+                          <Link href={item.url}>{item.title}</Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

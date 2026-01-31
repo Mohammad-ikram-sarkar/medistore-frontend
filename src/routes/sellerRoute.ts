@@ -1,19 +1,19 @@
 export const sellerRoutes = [
     {
-        title : "admin blog",
+        title : "seller blog",
        url : "/",
         items :[
             {
             title  : "Profile",
-            url : "/dashboard/Profile"
+            url : "/seller-dashboard/profile"
             },
             {
                 title : "Orders",
-                url : "/dashboard/orders"
+                url : "/seller-dashboard/orders"
             },
             {
                 title : "Update  Status",
-                url : "/dashboard/update-status"
+                url : "/seller-dashboard/update-status"
             }
         ] 
     }

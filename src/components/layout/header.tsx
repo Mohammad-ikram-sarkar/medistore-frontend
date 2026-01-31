@@ -26,6 +26,8 @@ export const HeroHeader = () => {
         router.push('/')
         router.refresh()
     }
+    
+    // const role
 
     React.useEffect(() => {
         const handleScroll = () => {
