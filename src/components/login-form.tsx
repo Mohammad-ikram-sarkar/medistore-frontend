@@ -48,10 +48,12 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema
     },
     onSubmit: async ({ value }) => {
+      
       const toastId = toast.loading("Signing in...")
 
       try {
         const { error,data } = await authClient.signIn.email(value)
+        // console.log(data)
 
         if (error) {
           toast.error(error.message, { id: toastId })

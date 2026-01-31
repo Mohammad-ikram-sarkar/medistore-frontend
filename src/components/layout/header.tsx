@@ -8,14 +8,6 @@ import { cn } from '@/lib/utils'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 import { ModeToggle } from './ModeToggle'
-type HeroHeaderProps = {
-    user?: {
-        name: string;
-        email: string;
-        image?: string;
-        role?: string;
-    } | null;
-};
 
 const menuItems = [
     { name: 'Home', href: '/' },
@@ -23,19 +15,17 @@ const menuItems = [
     { name: 'About', href: '/about' },
 ]
 
-export const HeroHeader = ({ user }: HeroHeaderProps) => {
+export const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
     const router = useRouter()
-   
-    // console.log(user)
+    const { data: session, isPending } = authClient.useSession()
 
     const handleLogout = async () => {
         await authClient.signOut()
         router.push('/')
         router.refresh()
     }
-
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -44,6 +34,7 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
+
     return (
         <header>
             <nav
@@ -61,13 +52,12 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
 
                             <button
                                 onClick={() => setMenuState(!menuState)}
-                                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
+                                aria-label={menuState ? 'Close Menu' : 'Open Menu'}
                                 className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
                                 <Menu className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
                                 <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
                             </button>
                         </div>
-
 
                         <div className="absolute inset-0 m-auto hidden size-fit lg:block">
                             <ul className="flex gap-8 text-sm">
@@ -80,6 +70,16 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                                         </Link>
                                     </li>
                                 ))}
+                                {
+                                    session?.user && (
+                                        <Link href={"/dashboard"} 
+                                        className="text-muted-foreground hover:text-accent-foreground block duration-150"
+                                        >
+                                            <span>Dashboard</span>
+                                        </Link>
+                                    )  
+                                }
+                               
                             </ul>
                         </div>
 
@@ -99,25 +99,25 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                             </div>
                             
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                {user === undefined ? (
+                                {isPending ? (
                                     // 🔄 LOADING
                                     <div className="flex gap-3">
                                         <div className="h-9 w-20 rounded-md bg-muted animate-pulse" />
                                         <div className="h-9 w-24 rounded-md bg-muted animate-pulse" />
                                     </div>
-                                ) : user ? (
+                                ) : session?.user ? (
+                                    // ✅ LOGGED IN
                                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                                        <div className="flex items-center gap-3 px-3  rounded-lg bg-muted/50">
-                                            {user.image && (
+                                        <div className="flex items-center gap-3 px-3 rounded-lg bg-muted/50">
+                                            {session.user.image && (
                                                 <img
-                                                    src={user.image}
-                                                    alt={user.name}
+                                                    src={session.user.image}
+                                                    alt={session.user.name}
                                                     className="w-8 h-8 rounded-full object-cover"
                                                 />
                                             )}
-                                            <div className=" flex-1">
-                                                <p className="font-semibold text-foreground ">{user.name}</p>
-
+                                            <div className="flex-1">
+                                                <p className="font-semibold text-foreground">{session.user.name}</p>
                                             </div>
                                         </div>
                                         <Button
@@ -130,6 +130,7 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                                         </Button>
                                     </div>
                                 ) : (
+                                    // ❌ NOT LOGGED IN
                                     <>
                                         <Button
                                             asChild
@@ -153,7 +154,6 @@ export const HeroHeader = ({ user }: HeroHeaderProps) => {
                             </div>
                             <ModeToggle/>
                         </div>
-                        
                     </div>
                 </div>
             </nav>

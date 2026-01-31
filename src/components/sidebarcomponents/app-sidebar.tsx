@@ -15,6 +15,15 @@ import {
   SidebarMenuSubItem,
 } from "@/components/sidebarcomponents/sidebar"
 
+import { adminRoutes } from "@/routes/adminRoute"
+import { customerRoutes } from "@/routes/customerRoute"
+import { sellerRoutes } from "@/routes/sellerRoute"
+import { Route } from "../../../types"
+
+
+
+
+
 // This is sample data.
 const data = {
   navMain: [
@@ -79,7 +88,22 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({user,  ...props }: {user :{role :string} & React.ComponentProps<typeof Sidebar>}) {
+  let routes :Route[]  = [] 
+  switch(user.role){
+    case "admin":
+    routes = adminRoutes
+    break;
+    case "customer" : 
+    routes = customerRoutes
+    break
+    case "seller" : 
+    routes = sellerRoutes
+    break
+    default :
+    routes=[]
+     break
+  }
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -94,7 +118,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
-            {data.navMain.map((item) => (
+            {routes.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
                   <a href={item.url} className="font-medium">

@@ -2,12 +2,13 @@ import { AppSidebar } from "@/components/sidebarcomponents/app-sidebar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/sidebarcomponents/sidebar";
 import { Separator } from "@radix-ui/react-separator";
+import { userService } from "@/service/user.service";
 
 
 
 
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
   admin,
   customer,
@@ -21,6 +22,8 @@ export default function DashboardLayout({
  const user = {
     role : "admin"
   }
+ const {data} =await userService.getSession()
+ console.log(data)
   const renderDashboard = () => {
   switch (user.role) {
     case "admin":
@@ -46,7 +49,7 @@ export default function DashboardLayout({
         } as React.CSSProperties
       }
     >
-      <AppSidebar />
+      <AppSidebar user={user} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />

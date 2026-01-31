@@ -1,18 +1,17 @@
 import { cookies } from "next/headers";
+import { env } from "../../env";
 
 export const userService = {
     getSession  : async () => {
         // Logic to get user session
         try {
             const cookiesStore = await cookies();
-            const res = await fetch(`${process.env.AUTH_URL}/get-session`, {
+            const res = await fetch(`${env.AUTH_URL}/get-session`, {
                 headers: {
                     "Content-Type": "application/json",
                     Cookie: cookiesStore.toString(),
                 },
-                next : {
-                    tags : ["session"]
-                }
+                cache: "no-store"
             });
 
             if (!res.ok) {
@@ -20,6 +19,8 @@ export const userService = {
             }
 
             const session = await res.json();
+            console.log(session)
+            console.log(session)
             if(session === null || !session.user) {
                 return {data: null, error: "No active session"};
             }
