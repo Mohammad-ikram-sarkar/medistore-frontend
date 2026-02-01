@@ -29,22 +29,29 @@ import Link from "next/link"
 // This is sample data.
 
 
-export function AppSidebar({user,  ...props }: {user :{role :string} & React.ComponentProps<typeof Sidebar>}) {
+export function AppSidebar({user,  ...props }: {user :{role :string} | null & React.ComponentProps<typeof Sidebar>}) {
   let routes :Route[]  = [] 
-  switch(user.role){
-    case "admin":
-    routes = adminRoutes
-    break;
-    case "customer" : 
-    routes = customerRoutes
-    break
-    case "seller" : 
-    routes = sellerRoutes
-    break
-    default :
-    routes=[]
-     break
+  
+  // Handle null user or missing role
+  if (!user || !user.role) {
+    routes = [];
+  } else {
+    switch(user.role){
+      case "admin":
+      routes = adminRoutes
+      break;
+      case "customer" : 
+      routes = customerRoutes
+      break
+      case "seller" : 
+      routes = sellerRoutes
+      break
+      default :
+      routes=[]
+       break
+    }
   }
+  
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
