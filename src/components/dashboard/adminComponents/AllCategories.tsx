@@ -59,7 +59,7 @@ interface AllCategoriesProps {
 }
 
 const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagination }) => {
-  const [categories, setCategories] = useState<Category[]>(initialData || []);
+  const [categories, setCategories] = useState<Category[]>(initialData?.filter(cat => cat && cat.name) || []);
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -80,9 +80,8 @@ const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagina
     });
   };
 
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCategories = categories.filter(category => category && category.id && category.name)
+
 
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) {
@@ -94,7 +93,7 @@ const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagina
       try {
         const result = await createCategoryAction(newCategoryName.trim());
         
-        if (result.success) {
+        if (result.success && result.data && result.data.name) {
           // Add the new category to the local state
           setCategories(prev => [result.data, ...prev]);
           setNewCategoryName('');
@@ -252,7 +251,9 @@ const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagina
             </Card>
           </div>
         ) : (
-          filteredCategories.map((category) => (
+          filteredCategories
+            .filter(category => category && category.id && category.name) // Filter out invalid categories
+            .map((category) => (
             <Card key={category.id} className="hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">

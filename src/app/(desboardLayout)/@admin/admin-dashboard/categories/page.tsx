@@ -6,7 +6,7 @@ const page = async () => {
     
         const { data } = await adminService.getAllCategories();
         
-      console.log(data.data.categories)
+ 
 
         return (
             <div>
