@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -19,52 +19,12 @@ import { authClient } from "@/lib/auth-client"
 import { useForm } from '@tanstack/react-form'
 import z from "zod"
 import { toast } from "sonner"
-import { useRouter, useSearchParams } from "next/navigation"
-import { env } from "../../env"
-import { AuthDebug } from "@/components/auth/AuthDebug"
+import { useRouter } from "next/navigation"
 
 export function LoginForm(props: React.ComponentProps<typeof Card>) {
   const [googleLoading, setGoogleLoading] = useState(false)
 
   const router = useRouter()
-  const searchParams = useSearchParams()
-
-  // ✅ Extract redirect param and error param
-  const redirectParam = searchParams.get('redirect')
-  const errorParam = searchParams.get('error')
-
-  // ✅ Safe redirect (prevent open redirect attack)
-  const safeRedirect = redirectParam?.startsWith('/') ? redirectParam : '/dashboard'
-
-  // ✅ Handle OAuth errors
-  useEffect(() => {
-    if (errorParam) {
-      switch (errorParam) {
-        case 'oauth_error':
-          toast.error('Google authentication failed. Please try again.')
-          break
-        case 'missing_code':
-          toast.error('Authentication code missing. Please try again.')
-          break
-        case 'callback_failed':
-          toast.error('Authentication callback failed. Please try again.')
-          break
-        case 'state_mismatch':
-          toast.error('Authentication state mismatch. Please try signing in again.')
-          break
-        case 'invalid_code':
-          toast.error('Invalid authentication code. Please try again.')
-          break
-        default:
-          toast.error('Authentication error occurred.')
-      }
-      
-      // Clean up URL
-      const url = new URL(window.location.href)
-      url.searchParams.delete('error')
-      window.history.replaceState({}, '', url.toString())
-    }
-  }, [errorParam])
 
   const formSchema = z.object({
     email: z.string().email(),
@@ -93,10 +53,9 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
         }
 
         toast.success("Signed in successfully", { id: toastId })
-
-        // ✅ Redirect after successful login
-        router.push(safeRedirect)
         
+        // Redirect to customer dashboard - other roles will be handled by their specific routes
+        router.push("/dashboard")
 
       } catch {
         toast.error("Something went wrong, please try again", { id: toastId })
@@ -108,19 +67,12 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
     setGoogleLoading(true)
 
     try {
-      // Store redirect URL in sessionStorage for after OAuth
-      if (safeRedirect !== '/dashboard') {
-        sessionStorage.setItem('auth_redirect', safeRedirect)
-      }
-
-      // Get the current origin for callback URL
-      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-      
       await authClient.signIn.social({
         provider: "google",
-        // ✅ Use dynamic callback URL based on current origin
-        callbackURL: `${currentOrigin}/api/auth/callback/google`,
+        callbackURL: "/api/auth/callback/google",
       })
+
+      // Google OAuth will redirect through the callback, so no need to handle redirect here
 
     } catch (err) {
       console.error("Google login failed:", err)
@@ -131,6 +83,18 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
     }
   }
 
+  // Quick login functions for testing
+  const quickLogin = (role: 'admin' | 'customer' | 'seller') => {
+    const credentials = {
+      admin: { email: 'admin@gmail.com', password: 'password1234' },
+      customer: { email: 'customer@gmail.com', password: 'password1234' },
+      seller: { email: 'seller@gmail.com', password: 'password1234' }
+    }
+
+    form.setFieldValue('email', credentials[role].email)
+    form.setFieldValue('password', credentials[role].password)
+  }
+
   return (
     <Card {...props}>
       <CardHeader>
@@ -138,6 +102,40 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
       </CardHeader>
 
       <CardContent>
+        {/* Quick Login Buttons */}
+        <div className="mb-6">
+          <p className="text-sm text-gray-600 mb-3">Quick Login (for testing):</p>
+          <div className="grid grid-cols-3 gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => quickLogin('admin')}
+              className="text-xs"
+            >
+              Admin
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => quickLogin('customer')}
+              className="text-xs"
+            >
+              Customer
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => quickLogin('seller')}
+              className="text-xs"
+            >
+              Seller
+            </Button>
+          </div>
+        </div>
+
         <form
           id="login-form"
           onSubmit={(e) => {
@@ -227,9 +225,6 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
           </Button>
 
         </div>
-
-        {/* Debug component for troubleshooting auth issues */}
-       
       </CardContent>
     </Card>
   )
