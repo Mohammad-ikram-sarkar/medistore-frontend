@@ -58,8 +58,10 @@ interface AllCategoriesProps {
   pagination?: Pagination;
 }
 
-const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagination }) => {
-  const [categories, setCategories] = useState<Category[]>(initialData?.filter(cat => cat && cat.name) || []);
+const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData = [], pagination }) => {
+  const [categories, setCategories] = useState<Category[]>(
+    Array.isArray(initialData) ? initialData.filter(cat => cat && cat.name) : []
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -80,7 +82,12 @@ const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagina
     });
   };
 
-  const filteredCategories = categories.filter(category => category && category.id && category.name)
+  const filteredCategories = categories.filter(category => 
+    category && 
+    category.id && 
+    category.name &&
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
 
   const handleCreateCategory = async () => {
@@ -93,7 +100,7 @@ const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagina
       try {
         const result = await createCategoryAction(newCategoryName.trim());
         
-        if (result.success && result.data && result.data.name) {
+        if (result.success && result.data) {
           // Add the new category to the local state
           setCategories(prev => [result.data, ...prev]);
           setNewCategoryName('');
@@ -118,7 +125,7 @@ const AllCategories: React.FC<AllCategoriesProps> = ({ data: initialData, pagina
       try {
         const result = await updateCategoryAction(editingCategory.id, editCategoryName.trim());
         
-        if (result.success) {
+        if (result.success && result.data) {
           // Update the category in local state
           setCategories(prev => 
             prev.map(cat => cat.id === editingCategory.id ? result.data : cat)

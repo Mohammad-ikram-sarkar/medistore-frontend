@@ -1,7 +1,8 @@
 import Allorder from '@/components/dashboard/adminComponents/Allorder';
 import adminService from '@/service/admin.service';
-import { redirect } from 'next/navigation';
-import React from 'react';
+
+// Force dynamic rendering to avoid build-time data fetching issues
+export const dynamic = 'force-dynamic';
 
 const page = async () => {
     try {

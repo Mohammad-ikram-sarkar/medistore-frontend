@@ -20,6 +20,9 @@ import { useForm } from '@tanstack/react-form'
 import z from "zod"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { cartUtils } from "@/lib/cart-utils"
+import { Role } from "@/constants/Role"
+import { AuthDebug } from "@/components/auth/AuthDebug"
 
 export function LoginForm(props: React.ComponentProps<typeof Card>) {
   const [googleLoading, setGoogleLoading] = useState(false)
@@ -50,6 +53,12 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
         if (error) {
           toast.error(error.message, { id: toastId })
           return
+        }
+
+        // Clear cart if user is not a customer (admin/seller shouldn't have cart items)
+        const userRole = (data?.user as any)?.role;
+        if (userRole && userRole !== Role.CUSTOMER) {
+          cartUtils.clearCart();
         }
 
         toast.success("Signed in successfully", { id: toastId })
@@ -225,6 +234,9 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
           </Button>
 
         </div>
+        
+        {/* Debug Component */}
+   
       </CardContent>
     </Card>
   )

@@ -17,10 +17,19 @@ import { Role } from "@/constants/Role";
 
 export default function Shop({ medicine }: { medicine: medicine }) {
   const { data: session } = authClient.useSession();
-  const userRole = (session?.user as any)?.role || "customer";
+  const userRole = (session?.user as any)?.role || null;
+  const isLoggedIn = !!session?.user;
   const isCustomer = userRole === Role.CUSTOMER;
 
   const handleAddToCart = () => {
+    // Check if user is logged in first
+    if (!isLoggedIn) {
+      toast.error("Please Login", {
+        description: "You need to login to add items to cart.",
+      });
+      return;
+    }
+
     if (!isCustomer) {
       toast.error("Access Denied", {
         description: "Only customers can add items to cart. Please login as a customer.",
@@ -67,6 +76,14 @@ export default function Shop({ medicine }: { medicine: medicine }) {
   };
 
   const handleOrderNow = () => {
+    // Check if user is logged in first
+    if (!isLoggedIn) {
+      toast.error("Please Login", {
+        description: "You need to login to place orders.",
+      });
+      return;
+    }
+
     if (!isCustomer) {
       toast.error("Access Denied", {
         description: "Only customers can place orders. Please login as a customer.",
@@ -159,8 +176,8 @@ export default function Shop({ medicine }: { medicine: medicine }) {
             </Button>
           </Link>
 
-          {/* ADD TO CART - Only show for customers */}
-          {isCustomer ? (
+          {/* ADD TO CART - Only show for logged in customers */}
+          {isLoggedIn && isCustomer ? (
             <Button
               variant="outline"
               size="icon"
@@ -175,14 +192,15 @@ export default function Shop({ medicine }: { medicine: medicine }) {
               size="icon"
               className="flex-1 opacity-50 cursor-not-allowed"
               onClick={handleAddToCart}
+              disabled
             >
               <ShoppingCart className="h-5 w-5" />
             </Button>
           )}
         </div>
 
-        {/* ORDER NOW - Only show for customers */}
-        {isCustomer ? (
+        {/* ORDER NOW - Only show for logged in customers */}
+        {isLoggedIn && isCustomer ? (
           <Button
             className="w-full bg-gray-200 hover:bg-gray-300 text-black font-semibold"
             onClick={handleOrderNow}
@@ -195,7 +213,7 @@ export default function Shop({ medicine }: { medicine: medicine }) {
             onClick={handleOrderNow}
             disabled
           >
-            Customer Only
+            {!isLoggedIn ? "Login Required" : "Customer Only"}
           </Button>
         )}
       </CardFooter>

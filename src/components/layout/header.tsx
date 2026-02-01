@@ -9,6 +9,7 @@ import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 import { ModeToggle } from './ModeToggle'
 import { CartIcon } from '@/components/ui/cart-icon'
+import { cartUtils } from '@/lib/cart-utils'
 
 const menuItems = [
     { name: 'Home', href: '/' },
@@ -21,11 +22,18 @@ export const HeroHeader = () => {
     const [isScrolled, setIsScrolled] = React.useState(false)
     const router = useRouter()
     const { data: session, isPending } = authClient.useSession()
+    console.log(session)
 
     const handleLogout = async () => {
-        await authClient.signOut()
-        router.push('/')
-        router.refresh()
+        // Clear cart data using utility function
+        cartUtils.clearCart();
+        
+        // Sign out the user
+        await authClient.signOut();
+        
+        // Redirect to home page
+        router.push('/');
+        router.refresh();
     }
     
     // const role

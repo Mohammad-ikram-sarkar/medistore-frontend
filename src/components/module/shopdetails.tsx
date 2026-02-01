@@ -10,6 +10,8 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth-client';
 import { Role } from '@/constants/Role';
+import ReviewSection from './ReviewSection';
+import { Review } from '../../../types/review.type';
 
 interface Product {
     id: string;
@@ -28,11 +30,13 @@ interface Product {
 
 interface ProductDetailProps {
     product: Product;
+    reviews?: Review[];
 }
 
-export default function Shopdetails({ product }: ProductDetailProps) {
+export default function Shopdetails({ product, reviews = [] }: ProductDetailProps) {
     const { data: session } = authClient.useSession();
-    const userRole = (session?.user as any)?.role || "customer";
+    const userRole = (session?.user as any)?.role || null;
+    const isLoggedIn = !!session?.user;
     const isCustomer = userRole === Role.CUSTOMER;
 
     const expiryDate = new Date(product.expiryDate);
@@ -185,6 +189,14 @@ export default function Shopdetails({ product }: ProductDetailProps) {
                             <Button
                                 className=" font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex-1"
                                 onClick={() => {
+                                    // Check if user is logged in first
+                                    if (!isLoggedIn) {
+                                        toast.error("Please Login", {
+                                            description: "You need to login to add items to cart.",
+                                        });
+                                        return;
+                                    }
+
                                     if (!isCustomer) {
                                         toast.error("Access Denied", {
                                             description: "Only customers can add items to cart. Please login as a customer.",
@@ -220,17 +232,25 @@ export default function Shopdetails({ product }: ProductDetailProps) {
                                     // Dispatch custom event to update cart count
                                     window.dispatchEvent(new Event("cartUpdated"));
                                 }}
-                                disabled={!isCustomer}
-                                variant={isCustomer ? "default" : "secondary"}
+                                disabled={!isLoggedIn || !isCustomer}
+                                variant={isLoggedIn && isCustomer ? "default" : "secondary"}
                             >
                                 <ShoppingCart className="w-5 h-5 mr-2" />
-                                {isCustomer ? "Add to Cart" : "Customer Only"}
+                                {!isLoggedIn ? "Login Required" : !isCustomer ? "Customer Only" : "Add to Cart"}
                             </Button>
                             
                             <Button
                                 variant="outline"
                                 className=" border-2  border-slate-300 hover:bg-slate-50 font-semibold  w-full flex-1"
                                 onClick={() => {
+                                    // Check if user is logged in first
+                                    if (!isLoggedIn) {
+                                        toast.error("Please Login", {
+                                            description: "You need to login to place orders.",
+                                        });
+                                        return;
+                                    }
+
                                     if (!isCustomer) {
                                         toast.error("Access Denied", {
                                             description: "Only customers can place orders. Please login as a customer.",
@@ -271,9 +291,9 @@ export default function Shopdetails({ product }: ProductDetailProps) {
                                         window.location.href = "/checkout";
                                     }, 500);
                                 }}
-                                disabled={!isCustomer}
+                                disabled={!isLoggedIn || !isCustomer}
                             >
-                                {isCustomer ? "Order Now" : "Customer Only"}
+                                {!isLoggedIn ? "Login Required" : !isCustomer ? "Customer Only" : "Order Now"}
                             </Button>
                         </div>
 
@@ -292,6 +312,11 @@ export default function Shopdetails({ product }: ProductDetailProps) {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Reviews Section */}
+                <div className="mt-16">
+                    <ReviewSection medicineId={product.id} reviews={reviews} />
                 </div>
             </main>
 

@@ -5,6 +5,9 @@ import { Separator } from "@radix-ui/react-separator";
 import { userService } from "@/service/user.service";
 import { redirect } from "next/navigation";
 
+// Force dynamic rendering to avoid build-time data fetching issues
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardLayout({
   children,
   admin,
@@ -78,7 +81,7 @@ export default async function DashboardLayout({
     );
   } catch (error) {
     console.error('Dashboard layout error:', error);
-    // During build time, redirect to login
+    // During build time or when there's an error, redirect to login
     redirect('/login');
     return null;
   }

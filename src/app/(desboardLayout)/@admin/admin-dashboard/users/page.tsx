@@ -1,6 +1,8 @@
 import Alluserstatus from '@/components/dashboard/adminComponents/Alluserstatus';
 import adminService from '@/service/admin.service';
-import React from 'react';
+
+// Force dynamic rendering to avoid build-time data fetching issues
+export const dynamic = 'force-dynamic';
 
 const page = async() => {
     try {

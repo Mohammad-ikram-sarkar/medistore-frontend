@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
+import { cartUtils } from '@/lib/cart-utils';
+import { Role } from '@/constants/Role';
 
 export default function AuthSuccessPage() {
   const router = useRouter();
@@ -14,6 +16,12 @@ export default function AuthSuccessPage() {
     if (isPending) return;
 
     if (session?.user) {
+      // Clear cart if user is not a customer (admin/seller shouldn't have cart items)
+      const userRole = (session.user as any)?.role;
+      if (userRole && userRole !== Role.CUSTOMER) {
+        cartUtils.clearCart();
+      }
+
       // Check for stored redirect URL
       const storedRedirect = sessionStorage.getItem('auth_redirect');
       

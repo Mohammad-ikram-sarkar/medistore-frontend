@@ -251,14 +251,9 @@ const CheckoutPage = () => {
 
     return (
       <div className="container mx-auto p-4 max-w-4xl">
-        <div className="mb-6">
-          <Link href="/cart" className="inline-flex items-center text-blue-600 hover:text-blue-800">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Cart
-          </Link>
-        </div>
+       
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-20">
           {/* Customer Information Form */}
           <div className="space-y-6">
             <Card>
