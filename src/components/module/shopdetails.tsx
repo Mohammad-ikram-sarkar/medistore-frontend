@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Calendar, Package, Building2, Info, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface Product {
     id: string;
@@ -175,28 +176,82 @@ export default function Shopdetails({ product }: ProductDetailProps) {
 
                         {/* Action Buttons */}
                         <div className="pt-4 flex gap-2 justify-between items-center ">
-                            <Link href={"/cart"} className='flex-1'>
                             <Button
-                             
-                                className=" font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex-1 w-full"
+                                className=" font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex-1"
+                                onClick={() => {
+                                    // Add to cart logic
+                                    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+                                    const found = existingCart.find((item: any) => item.id === product.id);
+                                    
+                                    if (found) {
+                                        found.quantity += 1;
+                                        toast.success("Quantity updated in cart", {
+                                            description: `${product.name} quantity increased to ${found.quantity}`,
+                                        });
+                                    } else {
+                                        existingCart.push({
+                                            id: product.id,
+                                            name: product.name,
+                                            price: product.price,
+                                            image: product.image,
+                                            brand: product.brand,
+                                            quantity: 1,
+                                        });
+                                        toast.success("Added to cart", {
+                                            description: `${product.name} has been added to your cart`,
+                                        });
+                                    }
+                                    
+                                    localStorage.setItem("cart", JSON.stringify(existingCart));
+                                    
+                                    // Dispatch custom event to update cart count
+                                    window.dispatchEvent(new Event("cartUpdated"));
+                                }}
                             >
                                 <ShoppingCart className="w-5 h-5 mr-2" />
                                 Add to Cart
                             </Button>
-
-                            </Link>
                             
-                            <Link href={"/checkout"} className='flex-1'>
                             <Button
-                                
                                 variant="outline"
                                 className=" border-2  border-slate-300 hover:bg-slate-50 font-semibold  w-full "
+                                onClick={() => {
+                                    // Add to cart first
+                                    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+                                    const found = existingCart.find((item: any) => item.id === product.id);
+                                    
+                                    if (found) {
+                                        found.quantity += 1;
+                                        toast.success("Quantity updated", {
+                                            description: `${product.name} quantity increased. Redirecting to checkout...`,
+                                        });
+                                    } else {
+                                        existingCart.push({
+                                            id: product.id,
+                                            name: product.name,
+                                            price: product.price,
+                                            image: product.image,
+                                            brand: product.brand,
+                                            quantity: 1,
+                                        });
+                                        toast.success("Added to cart", {
+                                            description: `${product.name} added. Redirecting to checkout...`,
+                                        });
+                                    }
+                                    
+                                    localStorage.setItem("cart", JSON.stringify(existingCart));
+                                    
+                                    // Dispatch custom event to update cart count
+                                    window.dispatchEvent(new Event("cartUpdated"));
+                                    
+                                    // Small delay to ensure cart is saved, then redirect
+                                    setTimeout(() => {
+                                        window.location.href = "/checkout";
+                                    }, 500);
+                                }}
                             >
-                                Order
+                                Order Now
                             </Button>
-
-                            </Link>
-                            
                         </div>
 
                         {/* Warning Notice */}

@@ -1,7 +1,14 @@
+import Orders from '@/components/dashboard/customerComponents/Orders'
+import customerService from '@/service/customer.service'
 import React from 'react'
 
-export default function page() {
+export default async function page() {
+  const {data} = await  customerService.getOrder()
+  console.log(data.data)
+
   return (
-    <div>page</div>
+    <div>
+      <Orders data={data.data} />
+    </div>
   )
 }

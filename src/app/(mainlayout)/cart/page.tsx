@@ -24,6 +24,9 @@ const AddToCart = () => {
 
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    
+    // Dispatch custom event to update cart count
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   // 💰 CALCULATE TOTAL
@@ -35,9 +38,8 @@ const AddToCart = () => {
   const handleCheckout = () => {
     if (cart.length === 0) return;
     
-    // Add your checkout logic here
-    alert(`Proceeding to checkout with total: ${calculateTotal()} tk`);
-    // You can redirect to checkout page or open a modal
+    // Redirect to checkout page
+    window.location.href = '/checkout';
   };
 
   return (

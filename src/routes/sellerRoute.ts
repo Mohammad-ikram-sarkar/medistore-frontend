@@ -1,6 +1,6 @@
 export const sellerRoutes = [
     {
-        title : "seller blog",
+        title : "Home",
        url : "/",
         items :[
             {

@@ -16,14 +16,12 @@ export async function proxy(request: NextRequest) {
 
   /* ===================== CART ===================== */
   if (pathname === "/cart") {
-    // Not logged in → login
     if (!data) {
       const loginUrl = new URL("/login", request.nextUrl.origin);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
     }
 
-    // Logged in but not customer → forbidden
     if (data.role !== Role.CUSTOMER) {
       return NextResponse.redirect(
         new URL("/forbidden", request.nextUrl.origin)
@@ -33,27 +31,29 @@ export async function proxy(request: NextRequest) {
 
   /* ===================== DASHBOARD ===================== */
   if (pathname.startsWith("/dashboard")) {
-    // Not logged in → login
-    
     if (!data) {
       return NextResponse.redirect(
         new URL("/login", request.nextUrl.origin)
       );
     }
-    if(data.role === Role.SELLER) {
-       return NextResponse.redirect(new URL("/seller-dashboard", request.url));
-    }
-    if(data.role ===Role.CUSTOMER) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
 
-    }
-      if(data.role ===Role.ADMIN) {
-      return NextResponse.redirect(new URL("/admin-dashboard", request.url));
-
+    if (data.role === Role.SELLER && !pathname.startsWith("/seller-dashboard")) {
+      return NextResponse.redirect(
+        new URL("/seller-dashboard", request.nextUrl.origin)
+      );
     }
 
-    // Only ADMIN and SELLER allowed
-    if (data.role !== Role.ADMIN && data.role !== Role.SELLER) {
+    if (data.role === Role.ADMIN && !pathname.startsWith("/admin-dashboard")) {
+      return NextResponse.redirect(
+        new URL("/admin-dashboard", request.nextUrl.origin)
+      );
+    }
+
+    if (
+      data.role !== Role.ADMIN &&
+      data.role !== Role.SELLER &&
+      data.role !== Role.CUSTOMER
+    ) {
       return NextResponse.redirect(
         new URL("/forbidden", request.nextUrl.origin)
       );
@@ -64,11 +64,13 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/cart", "/dashboard", "/dashboard/:path*",
+  matcher: [
+    "/cart",
+    "/dashboard",
+    "/dashboard/:path*",
     "/seller-dashboard",
     "/seller-dashboard/:path*",
-    "/admin-deshboard",
-    "/admin-deshboard/:path*"
-
+    "/admin-dashboard",
+    "/admin-dashboard/:path*",
   ],
 };

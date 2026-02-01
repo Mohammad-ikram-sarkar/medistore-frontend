@@ -8,6 +8,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 
 import { medicine } from "../../../types/medicine.type";
 import Link from "next/link";
@@ -28,6 +29,9 @@ export default function Shop({ medicine }: { medicine: medicine }) {
     if (found) {
       // quantity increase
       found.quantity += 1;
+      toast.success("Quantity updated in cart", {
+        description: `${medicine.name} quantity increased to ${found.quantity}`,
+      });
     } else {
       // add new item
       existingCart.push({
@@ -35,15 +39,62 @@ export default function Shop({ medicine }: { medicine: medicine }) {
         name: medicine.name,
         price: medicine.price,
         image: medicine.image,
-        brand : medicine.brand,
-        
-       
+        brand: medicine.brand,
         quantity: 1,
+      });
+      toast.success("Added to cart", {
+        description: `${medicine.name} has been added to your cart`,
       });
     }
 
     // set cart again
     localStorage.setItem("cart", JSON.stringify(existingCart));
+    
+    // Dispatch custom event to update cart count
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  const handleOrderNow = () => {
+    // Add item to cart first
+    const existingCart = JSON.parse(
+      localStorage.getItem("cart") || "[]"
+    );
+
+    // Check if already exists
+    const found = existingCart.find(
+      (item: any) => item.id === medicine.id
+    );
+
+    if (found) {
+      // Quantity increase
+      found.quantity += 1;
+    } else {
+      // Add new item
+      existingCart.push({
+        id: medicine.id,
+        name: medicine.name,
+        price: medicine.price,
+        image: medicine.image,
+        brand: medicine.brand,
+        quantity: 1,
+      });
+    }
+
+    // Save cart
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+    
+    // Dispatch custom event to update cart count
+    window.dispatchEvent(new Event("cartUpdated"));
+
+    // Show toast notification
+    toast.success("Added to cart", {
+      description: `${medicine.name} added. Redirecting to checkout...`,
+    });
+
+    // Small delay to ensure cart is saved, then redirect
+    setTimeout(() => {
+      window.location.href = "/checkout";
+    }, 500);
   };
 
   return (
@@ -90,26 +141,22 @@ export default function Shop({ medicine }: { medicine: medicine }) {
           </Link>
 
           {/* ADD TO CART */}
-          <Link href={"/cart"} className="flex-1">
           <Button
             variant="outline"
             size="icon"
-            className="w-full"
-            
+            className="flex-1"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-5 w-5" />
           </Button>
-          </Link>
-          
         </div>
-
-        <Button
+   <Button
           className="w-full bg-gray-200 hover:bg-gray-300 text-black font-semibold"
-          onClick={handleAddToCart}
+          onClick={handleOrderNow}
         >
-          Order
+          Order Now
         </Button>
+        
       </CardFooter>
     </Card>
   );

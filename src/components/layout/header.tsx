@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 import { ModeToggle } from './ModeToggle'
+import { CartIcon } from '@/components/ui/cart-icon'
 
 const menuItems = [
     { name: 'Home', href: '/' },
@@ -101,6 +102,7 @@ export const HeroHeader = () => {
                             </div>
                             
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
+                                <CartIcon />
                                 {isPending ? (
                                     // 🔄 LOADING
                                     <div className="flex gap-3">
