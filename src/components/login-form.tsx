@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -21,6 +21,7 @@ import z from "zod"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
 import { env } from "../../env"
+import { AuthDebug } from "@/components/auth/AuthDebug"
 
 export function LoginForm(props: React.ComponentProps<typeof Card>) {
   const [googleLoading, setGoogleLoading] = useState(false)
@@ -28,11 +29,42 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  // ✅ Extract redirect param
+  // ✅ Extract redirect param and error param
   const redirectParam = searchParams.get('redirect')
+  const errorParam = searchParams.get('error')
 
   // ✅ Safe redirect (prevent open redirect attack)
-  const safeRedirect = redirectParam?.startsWith('/') ? redirectParam : '/'
+  const safeRedirect = redirectParam?.startsWith('/') ? redirectParam : '/dashboard'
+
+  // ✅ Handle OAuth errors
+  useEffect(() => {
+    if (errorParam) {
+      switch (errorParam) {
+        case 'oauth_error':
+          toast.error('Google authentication failed. Please try again.')
+          break
+        case 'missing_code':
+          toast.error('Authentication code missing. Please try again.')
+          break
+        case 'callback_failed':
+          toast.error('Authentication callback failed. Please try again.')
+          break
+        case 'state_mismatch':
+          toast.error('Authentication state mismatch. Please try signing in again.')
+          break
+        case 'invalid_code':
+          toast.error('Invalid authentication code. Please try again.')
+          break
+        default:
+          toast.error('Authentication error occurred.')
+      }
+      
+      // Clean up URL
+      const url = new URL(window.location.href)
+      url.searchParams.delete('error')
+      window.history.replaceState({}, '', url.toString())
+    }
+  }, [errorParam])
 
   const formSchema = z.object({
     email: z.string().email(),
@@ -52,7 +84,7 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
       const toastId = toast.loading("Signing in...")
 
       try {
-        const { error,data } = await authClient.signIn.email(value)
+        const { error, data } = await authClient.signIn.email(value)
         console.log(data)
 
         if (error) {
@@ -63,8 +95,6 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
         toast.success("Signed in successfully", { id: toastId })
 
         // ✅ Redirect after successful login
- 
-        // console.log(data.redirect)
         router.push(safeRedirect)
         
 
@@ -78,11 +108,18 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
     setGoogleLoading(true)
 
     try {
+      // Store redirect URL in sessionStorage for after OAuth
+      if (safeRedirect !== '/dashboard') {
+        sessionStorage.setItem('auth_redirect', safeRedirect)
+      }
+
+      // Get the current origin for callback URL
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+      
       await authClient.signIn.social({
         provider: "google",
-
-        // ✅ Preserve redirect after OAuth
-        callbackURL: `${window.location.origin}/login?redirect=${encodeURIComponent(safeRedirect)}` || "http://localhost:3000" ,
+        // ✅ Use dynamic callback URL based on current origin
+        callbackURL: `${currentOrigin}/api/auth/callback/google`,
       })
 
     } catch (err) {
@@ -98,11 +135,6 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
     <Card {...props}>
       <CardHeader>
         <CardTitle>Sign in to your account</CardTitle>
-
-        {/* Debug (optional) */}
-        <p className="text-xs text-muted-foreground">
-          Redirect target: {safeRedirect}
-        </p>
       </CardHeader>
 
       <CardContent>
@@ -195,6 +227,9 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
           </Button>
 
         </div>
+
+        {/* Debug component for troubleshooting auth issues */}
+       
       </CardContent>
     </Card>
   )

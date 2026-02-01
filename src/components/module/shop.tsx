@@ -12,10 +12,22 @@ import { toast } from "sonner";
 
 import { medicine } from "../../../types/medicine.type";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { Role } from "@/constants/Role";
 
 export default function Shop({ medicine }: { medicine: medicine }) {
+  const { data: session } = authClient.useSession();
+  const userRole = (session?.user as any)?.role || "customer";
+  const isCustomer = userRole === Role.CUSTOMER;
 
   const handleAddToCart = () => {
+    if (!isCustomer) {
+      toast.error("Access Denied", {
+        description: "Only customers can add items to cart. Please login as a customer.",
+      });
+      return;
+    }
+
     // get cart from localStorage
     const existingCart = JSON.parse(
       localStorage.getItem("cart") || "[]"
@@ -55,6 +67,13 @@ export default function Shop({ medicine }: { medicine: medicine }) {
   };
 
   const handleOrderNow = () => {
+    if (!isCustomer) {
+      toast.error("Access Denied", {
+        description: "Only customers can place orders. Please login as a customer.",
+      });
+      return;
+    }
+
     // Add item to cart first
     const existingCart = JSON.parse(
       localStorage.getItem("cart") || "[]"
@@ -140,23 +159,45 @@ export default function Shop({ medicine }: { medicine: medicine }) {
             </Button>
           </Link>
 
-          {/* ADD TO CART */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="flex-1"
-            onClick={handleAddToCart}
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </Button>
+          {/* ADD TO CART - Only show for customers */}
+          {isCustomer ? (
+            <Button
+              variant="outline"
+              size="icon"
+              className="flex-1"
+              onClick={handleAddToCart}
+            >
+              <ShoppingCart className="h-5 w-5" />
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="icon"
+              className="flex-1 opacity-50 cursor-not-allowed"
+              onClick={handleAddToCart}
+            >
+              <ShoppingCart className="h-5 w-5" />
+            </Button>
+          )}
         </div>
-   <Button
-          className="w-full bg-gray-200 hover:bg-gray-300 text-black font-semibold"
-          onClick={handleOrderNow}
-        >
-          Order Now
-        </Button>
-        
+
+        {/* ORDER NOW - Only show for customers */}
+        {isCustomer ? (
+          <Button
+            className="w-full bg-gray-200 hover:bg-gray-300 text-black font-semibold"
+            onClick={handleOrderNow}
+          >
+            Order Now
+          </Button>
+        ) : (
+          <Button
+            className="w-full bg-gray-100 text-gray-500 font-semibold cursor-not-allowed"
+            onClick={handleOrderNow}
+            disabled
+          >
+            Customer Only
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

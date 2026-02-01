@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { Role } from "@/constants/Role";
 
 export const CartIcon = () => {
   const [cartCount, setCartCount] = useState(0);
+  const { data: session } = authClient.useSession();
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -40,6 +43,12 @@ export const CartIcon = () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, []);
+
+  // Only show cart icon for customers
+  const userRole = (session?.user as any)?.role || "customer";
+  if (userRole !== Role.CUSTOMER) {
+    return null;
+  }
 
   return (
     <Link href="/cart">
