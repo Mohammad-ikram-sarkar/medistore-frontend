@@ -13,8 +13,7 @@ import {
   Mail,
   Clock,
   CheckCircle,
-  AlertCircle,
-  Truck
+  AlertCircle
 } from 'lucide-react';
 
 interface Medicine {
@@ -47,9 +46,7 @@ const Orders: React.FC<OrdersProps> = ({ data }) => {
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'PROCESSING':
         return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'SHIPPED':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'DELIVERED':
+      case 'COMPLETED':
         return 'bg-green-100 text-green-800 border-green-200';
       case 'CANCELLED':
         return 'bg-red-100 text-red-800 border-red-200';
@@ -64,9 +61,7 @@ const Orders: React.FC<OrdersProps> = ({ data }) => {
         return <Clock className="w-4 h-4" />;
       case 'PROCESSING':
         return <AlertCircle className="w-4 h-4" />;
-      case 'SHIPPED':
-        return <Truck className="w-4 h-4" />;
-      case 'DELIVERED':
+      case 'COMPLETED':
         return <CheckCircle className="w-4 h-4" />;
       case 'CANCELLED':
         return <AlertCircle className="w-4 h-4" />;
@@ -244,7 +239,7 @@ const Orders: React.FC<OrdersProps> = ({ data }) => {
                         Being Prepared
                       </Badge>
                     )}
-                    {order.status.toUpperCase() === 'DELIVERED' && (
+                    {order.status.toUpperCase() === 'COMPLETED' && (
                       <Badge variant="outline" className="text-green-600 border-green-200">
                         Completed
                       </Badge>
