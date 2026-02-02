@@ -6,5 +6,10 @@ export const authClient = createAuthClient({
   // Ensure cookies are properly handled
   fetchOptions: {
     credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // Add mode for CORS handling
+    mode: 'cors',
   },
 })

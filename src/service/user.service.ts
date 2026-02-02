@@ -15,18 +15,20 @@ export const userService = {
             });
 
             if (!res.ok) {
+                console.error('Session fetch failed:', res.status, res.statusText);
                 return {data: null, error: "Failed to fetch session"};
             }
 
             const session = await res.json();
-            // console.log(session)
-            // console.log(session)
+            console.log('Session response:', session);
+            
             if(session === null || !session.user) {
                 return {data: null, error: "No active session"};
             }
        
             return {data: session.user, error: null};
         } catch (error) {
+            console.error('Session error:', error);
             // Return error object instead of throwing to allow graceful handling
             return {data: null, error: "Failed to get user session"};
         }

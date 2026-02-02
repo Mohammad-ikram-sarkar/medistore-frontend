@@ -92,7 +92,7 @@ const MedicineCreate: React.FC<MedicineCreateProps> = ({
         
         if (result.success) {
           toast.success('Medicine created successfully!');
-          router.push('/medicines');
+          router.push('/seller-dashboard/my-medicine');
         } else {
           toast.error(result.error?.message || 'Failed to create medicine');
         }

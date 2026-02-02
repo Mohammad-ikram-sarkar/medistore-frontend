@@ -18,6 +18,10 @@ export const sellerRoutes = [
             {
                 title  : "Medicine Post",
                 url : "/seller-dashboard/medicinePost"
+            },
+            {
+                title : "My Medicine",
+                url : "/seller-dashboard/my-medicine"
             }
         ] 
     }
