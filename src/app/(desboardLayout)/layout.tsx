@@ -21,13 +21,16 @@ export default async function DashboardLayout({
 }) {
 
   try {
-    const { data } = await userService.getSession();
+    const { data, error } = await userService.getSession();
     
     // Handle case where no session data is available
-    if (!data) {
+    if (!data || error) {
+      console.log('No session data, redirecting to login:', { data, error });
       redirect('/login');
       return null;
     }
+
+    console.log('Dashboard layout - user data:', data);
 
     const renderDashboard = () => {
       // Add null check for data and role
@@ -46,7 +49,7 @@ export default async function DashboardLayout({
           return seller;
         default:
           return <div className="p-6">
-            <p className="text-red-600">Invalid user role</p>
+            <p className="text-red-600">Invalid user role: {data.role}</p>
           </div>;
       }
     };

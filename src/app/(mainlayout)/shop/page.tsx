@@ -1,5 +1,12 @@
 import Shop from '@/components/module/shop';
 import medicineService from '@/service/medicine.service';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, Filter, SortAsc, SortDesc, Package, ChevronLeft, ChevronRight } from 'lucide-react';
+
 
 import { medicine } from '../../../../types/medicine.type';
 
@@ -39,6 +46,9 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
     
     return (
         <div className="container mx-auto px-4 sm:py-8 md:py-10">
+            {/* Backend Connectivity Test */}
+           
+            
             {/* Search Bar */}
             <div className="mb-6 mt-10">
                 <form method="GET" className="flex gap-4 items-end">
