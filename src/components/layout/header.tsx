@@ -22,15 +22,21 @@ export const HeroHeader = () => {
     const [isScrolled, setIsScrolled] = React.useState(false)
     const router = useRouter()
     const { data: session, isPending, error } = authClient.useSession()
+
+    const dataok = authClient.useSession();
+    console.log(dataok, "sodnfwf")
+
+
     
     // Enhanced debugging
     console.log('Header session debug:', {
-        session,
-        isPending,
-        error,
-        hasUser: !!session?.user,
-        timestamp: new Date().toISOString()
+        // session,
+        // isPending,
+        // error,
+        // hasUser: !!session?.user,
+        // timestamp: new Date().toISOString()
     })
+  
 
     const handleLogout = async () => {
         // Clear cart data using utility function
