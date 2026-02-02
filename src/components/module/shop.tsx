@@ -218,7 +218,7 @@ export default function Shop({ medicine }: { medicine: medicine }) {
           </div>
 
           {/* Rating */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <div className="flex items-center">
               {[1, 2, 3, 4].map((i) => (
                 <Star
@@ -230,23 +230,23 @@ export default function Shop({ medicine }: { medicine: medicine }) {
             </div>
             <span className="text-sm text-gray-500">4.5</span>
           </div>
-          
+           */}
           {/* Stock Status */}
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${medicine.quantity > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
               <span className={`text-xs font-medium ${medicine.quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {medicine.quantity > 0 ? `${medicine.quantity} in stock` : 'Out of stock'}
               </span>
             </div>
-          </div>
+          </div> */}
         </div>
       </CardHeader>
 
       <CardContent>
         <div className="space-y-2">
           {/* Brand and Expiry */}
-          <div className="space-y-1">
+          {/* <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-500">Brand:</span>
               <span className="font-medium text-gray-700">{medicine.brand}</span>
@@ -259,7 +259,7 @@ export default function Shop({ medicine }: { medicine: medicine }) {
                 </span>
               </div>
             )}
-          </div>
+          </div> */}
           
           {/* Description */}
           <div className="text-sm text-gray-600">

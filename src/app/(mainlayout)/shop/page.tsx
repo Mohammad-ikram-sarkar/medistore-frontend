@@ -18,7 +18,7 @@ interface SearchParams {
 const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
     // Await the searchParams Promise
     const params = await searchParams;
-    
+
     // Convert string parameters to appropriate types
     const searchOptions = {
         search: params.search,
@@ -37,17 +37,17 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
     // Handle the new data structure: data.medicines instead of data
     const medicines = getmedicine.data?.medicines || [];
     const pagination = getmedicine.data?.pagination;
-    
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="container mx-auto px-4 py-8 ">
                 {/* Header */}
-               
+
                 {/* Desktop Search Filters */}
                 <div className="hidden sm:block mt-10">
                     <SearchFilters currentParams={params} />
                 </div>
-                
+
                 {/* Results Section */}
                 <div className="mt-8">
                     {medicines.length === 0 ? (
@@ -60,8 +60,8 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
                                 </div>
                                 <h3 className="text-lg font-medium text-gray-900 mb-2">No medicines found</h3>
                                 <p className="text-gray-600 mb-4">Try adjusting your search criteria or browse all medicines</p>
-                                <a 
-                                    href="/shop" 
+                                <a
+                                    href="/shop"
                                     className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                                 >
                                     View All Medicines
@@ -71,8 +71,8 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
                     ) : (
                         <>
                             {/* Results Header */}
-                            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        {/* <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                     <div className="flex items-center gap-4">
                                         <p className="text-sm text-gray-600">
                                             <span className="font-medium text-gray-900">{medicines.length}</span> of{' '}
@@ -84,33 +84,33 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
                                             )}
                                         </p>
                                         {(params.search || params.category || params.minPrice || params.maxPrice) && (
-                                            <a 
-                                                href="/shop" 
+                                            <a
+                                                href="/shop"
                                                 className="text-sm text-blue-600 hover:text-blue-800 underline"
                                             >
                                                 Clear filters
                                             </a>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-4">
-                                        {/* Mobile Filter Button in Results Header */}
+                                     <div className="flex items-center gap-4">
+                                        
                                         <div className="sm:hidden">
                                             <MobileFilterSheet currentParams={params} />
                                         </div>
                                         <p className="text-sm text-gray-500">
                                             Page {pagination?.page || 1} of {pagination?.totalPages || 1}
                                         </p>
-                                    </div>
+                                    </div> 
                                 </div>
-                            </div>
-                            
+                            </div> */}
+
                             {/* Medicine Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {medicines.map((medicine: medicine) => (
-                                    <Shop medicine={medicine} key={medicine.id}/>
+                                    <Shop medicine={medicine} key={medicine.id} />
                                 ))}
                             </div>
-                            
+
                             {/* Pagination */}
                             {pagination && pagination.totalPages > 1 && (
                                 <div className="mt-12 flex justify-center">
@@ -130,7 +130,7 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
                                                 <span className="hidden sm:inline">Previous</span>
                                             </a>
                                         )}
-                                        
+
                                         {/* Page Numbers */}
                                         {Array.from({ length: Math.min(pagination.totalPages, 7) }, (_, i) => {
                                             let pageNum;
@@ -147,7 +147,7 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
                                                     pageNum = current - 3 + i;
                                                 }
                                             }
-                                            
+
                                             return (
                                                 <a
                                                     key={pageNum}
@@ -155,17 +155,16 @@ const page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
                                                         ...params,
                                                         page: pageNum.toString()
                                                     }).toString()}`}
-                                                    className={`px-3 py-2 text-sm font-medium border ${
-                                                        pageNum === (pagination.page || 1)
+                                                    className={`px-3 py-2 text-sm font-medium border ${pageNum === (pagination.page || 1)
                                                             ? 'bg-blue-600 text-white border-blue-600'
                                                             : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {pageNum}
                                                 </a>
                                             );
                                         })}
-                                        
+
                                         {/* Next Button */}
                                         {pagination.page < pagination.totalPages && (
                                             <a
