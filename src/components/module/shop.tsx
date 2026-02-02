@@ -193,7 +193,7 @@ export default function Shop({ medicine }: { medicine: medicine }) {
   };
 
   return (
-    <Card className="overflow-hidden rounded-2xl shadow-lg max-sm:mt-20 mt-10">
+    <Card className="overflow-hidden rounded-2xl shadow-lg max-sm:mt-20 mt-10 ">
       {/* Image */}
       <div className="relative aspect-square h-[200px]">
         <img
@@ -322,7 +322,7 @@ export default function Shop({ medicine }: { medicine: medicine }) {
               disabled
             >
               <ShoppingCart className="h-4 w-4 mr-1" />
-              {medicine.quantity === 0 ? 'Out of Stock' : !isLoggedIn ? 'Login' : 'Customer Only'}
+              {medicine.quantity === 0 ? 'Out of Stock' : !isLoggedIn ? '' : ''}
             </Button>
           )}
         </div>
