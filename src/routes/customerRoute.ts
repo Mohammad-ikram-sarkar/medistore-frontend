@@ -1,11 +1,11 @@
 export const customerRoutes = [
     {
-        title: "customer blog",
+        title: "Home",
 url : "/",
         items: [
             {
                 title: "Profile",
-                url: "/dashboard/profile"
+                url: "/dashboard"
             },
             {
                 title: "Order",

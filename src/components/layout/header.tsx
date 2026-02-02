@@ -24,18 +24,18 @@ export const HeroHeader = () => {
     const { data: session, isPending, error } = authClient.useSession()
 
     const dataok = authClient.useSession();
-    console.log(dataok, "sodnfwf")
+    // console.log(dataok, "sodnfwf")
 
 
     
     // Enhanced debugging
-    console.log('Header session debug:', {
-        // session,
-        // isPending,
-        // error,
-        // hasUser: !!session?.user,
-        // timestamp: new Date().toISOString()
-    })
+    // console.log('Header session debug:', {
+    //     // session,
+    //     // isPending,
+    //     // error,
+    //     // hasUser: !!session?.user,
+    //     // timestamp: new Date().toISOString()
+    // })
   
 
     const handleLogout = async () => {

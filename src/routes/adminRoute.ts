@@ -1,6 +1,6 @@
 export const adminRoutes = [
     {
-        title : "admin blog",
+        title : "Home",
         url : "/",
         items :[
             {

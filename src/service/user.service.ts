@@ -16,7 +16,7 @@ export const userService = {
                 cache: "no-store"
             });
 
-            console.log('Session fetch response status:', res.status);
+            // console.log('Session fetch response status:', res.status);
 
             if (!res.ok) {
                 console.error('Session fetch failed:', res.status, res.statusText);
@@ -24,14 +24,14 @@ export const userService = {
             }
 
             const session = await res.json();
-            console.log('Session response:', session);
+            // console.log('Session response:', session);
             
             if (session === null || !session.user) {
                 console.log('No active session found');
                 return { data: null, error: "No active session" };
             }
 
-            console.log('Session user data:', session.user);
+            // console.log('Session user data:', session.user);
             return { data: session.user, error: null };
         } catch (error) {
             console.error('Session error:', error);

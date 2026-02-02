@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,13 +21,10 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { cartUtils } from "@/lib/cart-utils"
 import { Role } from "@/constants/Role"
-import CookieDebug from "@/components/debug/CookieDebug"
-import SessionTest from "@/components/debug/SessionTest"
+import Link from "next/link"
 
 export function LoginForm(props: React.ComponentProps<typeof Card>) {
   const [googleLoading, setGoogleLoading] = useState(false)
-  const [showDebug, setShowDebug] = useState(false)
-
   const router = useRouter()
 
   const formSchema = z.object({
@@ -45,7 +41,6 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema
     },
     onSubmit: async ({ value }) => {
-      
       const toastId = toast.loading("Signing in...")
 
       try {
@@ -66,26 +61,14 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
 
         toast.success("Signed in successfully", { id: toastId })
         
-        // Redirect to customer dashboard - other roles will be handled by their specific routes
-        window.location.href = "/dashboard";
+        // Use router.push instead of window.location.href for better UX
+        router.push("/dashboard")
 
       } catch (err) {
         console.error('Login catch error:', err)
         toast.error("Something went wrong, please try again", { id: toastId })
       }
     },
-  })
-
-  const { data: session, isPending, error } = authClient.useSession()
-  
-  // Enhanced session debugging
-  console.log('Login form session debug:', {
-    session,
-    isPending,
-    error,
-    hasUser: !!session?.user,
-    userRole: session?.user ? (session.user as any).role : null,
-    timestamp: new Date().toISOString()
   })
 
   const signInWithGoogle = async () => {
@@ -96,8 +79,6 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
         provider: "google",
         callbackURL: "/api/auth/callback/google",
       })
-
-      // Google OAuth will redirect through the callback, so no need to handle redirect here
 
     } catch (err) {
       console.error("Google login failed:", err)
@@ -128,23 +109,6 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
         </CardHeader>
 
         <CardContent>
-          {/* Session Status Display */}
-          <div className="mb-4 p-3 bg-muted rounded-lg">
-            <div className="text-sm">
-              <strong>Session Status:</strong> {isPending ? '🔄 Loading...' : session?.user ? '✅ Logged In' : '❌ Not Logged In'}
-            </div>
-            {session?.user && (
-              <div className="text-xs text-muted-foreground mt-1">
-                User: {session.user.name} ({(session.user as any)?.role || 'No role'})
-              </div>
-            )}
-            {error && (
-              <div className="text-xs text-red-600 mt-1">
-                Error: {error.message}
-              </div>
-            )}
-          </div>
-          
           {/* Quick Login Buttons */}
           <div className="mb-6">
             <p className="text-sm text-gray-600 mb-3">Quick Login (for testing):</p>
@@ -187,7 +151,6 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
             }}
           >
             <FieldGroup>
-
               <form.Field
                 name="email"
                 children={(field) => {
@@ -235,62 +198,23 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
                   )
                 }}
               />
-
             </FieldGroup>
           </form>
 
           <div className="space-y-4 mt-4">
-
             <Button form="login-form" type="submit" className="w-full">
               Sign In
             </Button>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
+            <div className="text-center text-sm">
+              Don't have an account?{" "}
+              <Link href="/register" className="text-primary hover:underline">
+                Sign up
+              </Link>
             </div>
-
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={signInWithGoogle}
-              disabled={googleLoading}
-            >
-              {googleLoading ? "Loading..." : "Sign in with Google"}
-            </Button>
-
-          </div>
-          
-          {/* Debug Toggle */}
-          <div className="mt-6 pt-4 border-t">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowDebug(!showDebug)}
-              className="w-full text-xs"
-            >
-              {showDebug ? 'Hide' : 'Show'} Debug Info
-            </Button>
           </div>
         </CardContent>
       </Card>
-
-      {/* Debug Components */}
-      {showDebug && (
-        <div className="space-y-4">
-          <CookieDebug />
-          <SessionTest />
-        </div>
-      )}
     </div>
   )
 }
