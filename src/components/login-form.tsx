@@ -67,7 +67,7 @@ export function LoginForm(props: React.ComponentProps<typeof Card>) {
         toast.success("Signed in successfully", { id: toastId })
         
         // Redirect to customer dashboard - other roles will be handled by their specific routes
-        router.push("/dashboard")
+        window.location.href = "/dashboard";
 
       } catch (err) {
         console.error('Login catch error:', err)
