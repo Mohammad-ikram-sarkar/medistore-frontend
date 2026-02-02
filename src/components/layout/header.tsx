@@ -14,6 +14,7 @@ import { cartUtils } from '@/lib/cart-utils'
 const menuItems = [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
+    { name: 'Consult', href: '/consult' },
     { name: 'About', href: '/about' },
 ]
 

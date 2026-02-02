@@ -8,18 +8,18 @@ export default function StructuredData() {
     "logo": "https://medistore.com/logo.png",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+1-555-123-4567",
+      "telephone": "+880-1700-000000",
       "contactType": "customer service",
-      "availableLanguage": "English",
-      "areaServed": "US"
+      "availableLanguage": ["English", "Bengali"],
+      "areaServed": "BD"
     },
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "123 Health Street",
-      "addressLocality": "Medical City",
-      "addressRegion": "MC",
-      "postalCode": "12345",
-      "addressCountry": "US"
+      "streetAddress": "123 Dhanmondi",
+      "addressLocality": "Dhaka",
+      "addressRegion": "Dhaka Division",
+      "postalCode": "1205",
+      "addressCountry": "BD"
     },
     "sameAs": [
       "https://facebook.com/medistore",

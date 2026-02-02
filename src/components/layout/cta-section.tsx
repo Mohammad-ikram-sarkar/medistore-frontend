@@ -37,15 +37,15 @@ export default function CTASection() {
               variant="outline"
               className="border-white text-white hover:bg-white hover:text-primary"
             >
-              <Link href="tel:+1-555-123-4567">
+              <Link href="tel:+880-1700-000000">
                 <Phone className="mr-2 h-5 w-5" />
-                Call: +1 (555) 123-4567
+                Call: +880 1700-000000
               </Link>
             </Button>
           </div>
           
           <div className="mt-8 text-sm opacity-75">
-            <p>Available 24/7 • Licensed Pharmacists • Free Consultation</p>
+            <p>Available 24/7 • Licensed Doctors • Free Consultation</p>
           </div>
         </div>
       </div>
