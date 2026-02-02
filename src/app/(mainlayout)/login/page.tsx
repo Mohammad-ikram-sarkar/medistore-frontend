@@ -3,6 +3,16 @@ import { Suspense } from "react"
 import { Spinner } from "@/components/ui/spinner"
 import { userService } from "@/service/user.service"
 import { redirect } from "next/navigation"
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Sign in to your MediStore account to access your orders, prescriptions, and personalized healthcare services.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default async function Page() {
   const { data } = await userService.getSession()

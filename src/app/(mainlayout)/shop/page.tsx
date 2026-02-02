@@ -3,6 +3,25 @@ import medicineService from '@/service/medicine.service';
 import { SearchFilters } from '@/components/module/SearchFilters';
 import { MobileFilterSheet } from '@/components/module/MobileFilterSheet';
 import { medicine } from '../../../../types/medicine.type';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Shop Medicines",
+  description: "Browse our extensive collection of authentic medicines and healthcare products. Find prescription drugs, over-the-counter medications, and medical supplies with fast delivery.",
+  keywords: [
+    "buy medicines online",
+    "prescription drugs",
+    "pharmacy shop",
+    "medical supplies",
+    "healthcare products",
+    "medicine delivery"
+  ],
+  openGraph: {
+    title: "Shop Medicines | MediStore",
+    description: "Browse our extensive collection of authentic medicines and healthcare products with fast delivery.",
+    images: ["/og-shop.png"],
+  },
+};
 
 interface SearchParams {
     search?: string;
